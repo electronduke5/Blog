@@ -1,0 +1,18 @@
+﻿@*@model IEnumerable<Blog.Models.FileModel>
+
+
+@{ 
+    ViewData["Tittle"] = "AddFile";
+}
+
+<form asp-action="AddFile" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <input type="submit" value="Отправить"/>
+</form>
+
+ @{ 
+     foreach(var f in Model)
+     {
+         <p><img src="@Url.Content(f.Path)"/></p>
+     }
+ }*@

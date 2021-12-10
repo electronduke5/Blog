@@ -1,0 +1,41 @@
+﻿@model Blog.Models.User
+@{
+    ViewBag.Tittle = "Удаление пользователя";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <h2>@Model.FullName</h2>
+
+        <hr />
+
+        <dt>Дата рождения</dt>
+        <dd>
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+
+        <dt>Email</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>Login</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+
+        <dt>Password</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <hr />
+        <dt>
+            Вы действительно хотите удалить данного пользователя?
+        </dt>
+    </dl>
+</div>
+
+<form asp-action="delete" asp-controller="home" method="post">
+    <div class="form-group">
+        <input type="submit" value="Удалить" class="btn btn-outline-danger" />
+    </div>
+</form>

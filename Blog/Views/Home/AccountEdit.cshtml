@@ -1,0 +1,181 @@
+﻿@model Blog.Models.User
+
+
+@{
+    ViewData["Tittle"] = "Редактирование";
+}
+
+<style>
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .leftcolumn {
+        float: left;
+        width: 20%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 80%;
+        padding-left: 20px;
+    }
+
+    .parent {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #efefef;
+        position: fixed;
+    }
+
+    .item {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+
+        /*Если наводишь*/
+        .item:hover:not(.item:active) {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+        /*Если кликаешь*/
+        .item:active {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+    nav {
+        font-weight: bold;
+        position: fixed;
+        width: 100%;
+        margin: 5px;
+        border-radius: 7px;
+    }
+</style>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 ">
+    <div class="container">
+        <a class="navbar-brand">
+            <img src="~/res/icon.png" width="32" height="32" class="d-inline-block align-top" />
+            3,14здец
+        </a>
+
+        @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>*@
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        @*<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item ">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Create">Добавить пользователя</a>
+                    </li>
+
+                </ul>
+            </div>*@
+
+        <form class="form-inline">
+
+            <i class="fa fa-sign-in fa-lg"></i>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Loging">Выйти</a>
+
+
+        </form>
+
+    </div>
+</nav>
+
+
+
+<form asp-action="AccountEdit" asp-controller="home">
+    <div class="row">
+        <div class="leftcolumn">
+            <ul class="parent">
+                <li>
+                    <a class="item" asp-action="EmptyIndex" asp-controller="home">Мой аккаунт</a>
+                </li>
+
+                <li>
+                    <a class="item" asp-action="Search" asp-controller="Search">Поиск</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="rightcolumn">
+            <div class="card">
+                <div class="input-group">
+                    <span class="input-group-text">Фамилия и имя</span>
+                    <input type="text" asp-for="Surname" value="@Model.Surname" placeholder="Фамилия" class="form-control" />
+                    <input type="text" asp-for="Name" value="@Model.Name" placeholder="Имя" class="form-control" />
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md">
+                        <div class="form-group">
+                            <a>Дата рождения</a>
+                            @{
+                                if (Model.BirthDate != null)
+                                {
+                                    <input type="date" asp-for="BirthDate" value="@Model.BirthDate" class="form-control" />
+
+                                }
+                                else
+                                {
+                                    <input type="date" asp-for="BirthDate" class="form-control" />
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-group">
+                            <a>Эл. почта</a>
+                            <input type="email" asp-for="Email" value="@Model.Email" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+
+                    <div class="col-md">
+                        <div class="form-group">
+                            <a>Логин</a>
+                            <input type="text" asp-for="Login" value="@Model.Login" class="form-control" />
+                        </div>
+                    </div>
+
+
+                    <div class="col-md">
+                        <div class="form-group">
+                            <a>Пароль</a>
+                            <input type="text" asp-for="Password" value="@Model.Password" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <input hidden="hidden" type="number" asp-for="RoleID" value="@Model.RoleID" class="form-control" />
+
+                <div class="form-group">
+                    <input type="submit" value="Сохранить изменения" class="btn btn-outline-success" />
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>

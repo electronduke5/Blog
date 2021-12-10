@@ -1,0 +1,192 @@
+﻿@using Blog.Helpers
+@model Blog.ViewModels.IndexViewModel
+
+@{
+    if (Model == null)
+    {
+        <div>Произошла ошибка!</div>
+        return;
+    }
+
+}
+
+@*@model Tuple<Blog.Models.User, Blog.Models.Post>*@
+
+
+@{
+    ViewData["Title"] = "Поиск";
+    ViewData["PageId"] = "allusers";
+}
+
+<style>
+    .leftcolumn {
+        float: left;
+        width: 20%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 80%;
+        padding-left: 20px;
+    }
+    /* Add a card effect for articles */
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .item {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+
+        /*Если наводишь*/
+        .item:hover:not(.item:active) {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+        /*Если кликаешь*/
+        .item:active {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+
+    .parent {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #efefef;
+        position: fixed;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        font-style: italic;
+    }
+
+    .profile-name {
+        font-style: normal;
+        font-weight: bold;
+    }
+
+    .border-radius {
+        color: dimgrey;
+        text-decoration: none;
+    }
+
+        .border-radius:hover:not(:active) {
+            color: black;
+            text-decoration: none;
+        }
+
+        .border-radius:active {
+            text-decoration: none;
+        }
+
+    nav {
+        font-weight: bold;
+        position: fixed;
+        width: 100%;
+        margin: 5px;
+        border-radius: 7px;
+    }
+</style>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 ">
+    <div class="container">
+        <a class="navbar-brand">
+            <img src="~/res/icon.png" width="32" height="32" class="d-inline-block align-top" />
+            3,14здец
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <form class="form-inline">
+
+            <i class="fa fa-sign-in fa-lg"></i>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Loging">Выйти</a>
+
+
+        </form>
+
+    </div>
+</nav>
+
+
+<div class="row">
+    <div class="leftcolumn">
+        <ul class="parent">
+            <li>
+                <a class="item" asp-action="EmptyIndex" asp-controller="home">Мой аккаунт</a>
+            </li>
+
+            <li>
+                <a class="item" asp-action="Search" asp-controller="Search">Поиск</a>
+            </li>
+
+            @{
+                if (Model.LoggedUser.RoleID == 1)
+                {
+                    <li>
+                        <a class="item" asp-action="GetAllPosts" asp-controller="feed">Все посты</a>
+                    </li>
+
+                    <li>
+                        <a class="item" asp-action="GetAllUsers" asp-controller="home" asp-route-id="@Model.LoggedUser.ID">Все пользователи</a>
+                    </li>
+                }
+
+            }
+
+        </ul>
+    </div>
+    <div class="rightcolumn">
+
+
+
+
+        @{
+            if (Model.AllUsers.Count() == 0)
+            {
+                <span class="centered">Пользователей еще нет!</span>
+            }
+            else
+            {
+                foreach (var user in Model.AllUsers)
+                {
+                    <a class="border-radius" href="@Url.Action("Account", "Home", new {id = user.ID})">
+                        <div class="card">
+                            <div class="profile-info">
+                                <span class="profile-name">@user.FullName</span>
+
+                                @{
+                                    if (user.BirthDate != null)
+                                    {
+                                        <span>День рождения:</span>
+                                        <span>@user.BirthDate.Value.ToShortDateString()</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        }
+    </div>

@@ -1,0 +1,286 @@
+﻿@using Blog.Helpers
+@model Blog.ViewModels.FeedViewModel
+
+
+@{
+    if (Model == null)
+    {
+        <div>Произошла ошибка!</div>
+        return;
+    }
+}
+
+
+@{
+    ViewData["Title"] = "Новости";
+    ViewData["PageId"] = "Feed";
+}
+
+<style>
+
+    .parent {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #efefef;
+        position: fixed;
+    }
+
+    .item {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+
+        /*Если наводишь*/
+        .item:hover:not(.item:active) {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+        /*Если кликаешь*/
+        .item:active {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+
+    .leftcolumn {
+        float: left;
+        width: 20%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 80%;
+        padding-left: 20px;
+    }
+    /* Add a card effect for articles */
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .post {
+        /*transition: height 0.9s ease-in-out;*/
+        width: 100%;
+        /*width: 200px;*/
+        max-height: 200px;
+        resize: none;
+    }
+
+    .post1 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+
+    .posts {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: -10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #post-image {
+        opacity: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    #post-image-view {
+        height: auto;
+        width: auto;
+        border-radius: 0;
+        max-width: 100%;
+    }
+
+    .post-header {
+        display: flex;
+        gap: 10px;
+    }
+
+    .post-image {
+        max-width: 550px;
+    }
+
+        .post-image > img {
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            max-width: 100%;
+        }
+
+    .post-date {
+        font-style: italic;
+    }
+
+    .post-author {
+        font-weight: bold;
+    }
+
+    .post:first-child {
+        padding-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    nav {
+        font-weight: bold;
+        position: fixed;
+        width: 100%;
+        margin: 5px;
+        border-radius: 7px;
+    }
+</style>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 ">
+    <div class="container">
+        <a class="navbar-brand">
+            <img src="~/res/icon.png" width="32" height="32" class="d-inline-block align-top" />
+            3,14здец
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <form class="form-inline">
+
+            <i class="fa fa-sign-in fa-lg"></i>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Loging">Выйти</a>
+
+
+        </form>
+
+    </div>
+</nav>
+
+
+
+<div class="row">
+    <div class="leftcolumn">
+        <ul class="parent">
+            <li>
+                <a class="item" asp-action="EmptyIndex" asp-controller="home">Мой аккаунт</a>
+            </li>
+
+            <li>
+                <a class="item" asp-action="Search" asp-controller="Search">Поиск</a>
+            </li>
+
+            <li>
+                <a class="item" asp-action="GetAllPosts" asp-controller="feed">Все посты</a>
+            </li>
+
+            <li>
+                <a class="item" asp-action="GetAllUsers" asp-controller="home" asp-route-id="@Model.LoggedUser.ID">Все пользователи</a>
+            </li>
+
+
+
+
+        </ul>
+    </div>
+    <div class="rightcolumn">
+        <div class="posts">
+            @{
+
+                if (Model.Feed.Count() != 0)
+                {
+                    foreach (var post in Model.Feed)
+                    {
+                        <div class="card">
+                            <div class="post-header">
+                                <div class="post-info">
+                                    <a href="@Url.Action("Account", "Home", new {id = post.UserID })">
+                                        <div class="post-author">
+
+                                            @Model.DataBase.Users.Where(user => user.ID == post.UserID).FirstOrDefault().FullName
+                                        </div>
+                                    </a>
+
+                                    <div class="post-date">
+                                        @post.CreatedDate
+                                    </div>
+                                </div>
+
+
+                                @{
+
+                                    using (Html.BeginForm(
+                                                        "DeletePost",
+                                                        "Post",
+                                                        new { },
+                                                        FormMethod.Post,
+                                                        false,
+                                                        new { @class = "delete-post" }
+                                                        ))
+                                    {
+                                        <input type="hidden" name="requesterId" value="@post.UserID" />
+                                        <input type="hidden" name="postId" value="@post.IdPost" />
+
+                                        <button align-items="right" type="submit" class="btn btn-outline-danger">
+                                            <i class="fa fa-close fa-lg"></i>
+                                        </button>
+                                    }
+
+                                }
+                            </div>
+                            <hr />
+                            <div>
+                                <p>@post.Text</p>
+                            </div>
+
+                            @{
+                                if (post.ImagePath != null)
+                                {
+                                    <div class="post-image centered">
+                                        <img src="@Url.Content(post.FullImagePath)" alt="" />
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+                    }
+                }
+
+
+
+                else
+                {
+                    <div class="card">
+                        <span class="text-center">Записей еще нет!</span>
+                    </div>
+                }
+
+            }
+        </div>
+
+
+
+
+    </div>
+</div>

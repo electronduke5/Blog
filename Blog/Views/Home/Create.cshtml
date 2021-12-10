@@ -1,0 +1,41 @@
+﻿@model Blog.Models.User
+@{
+    ViewBag.Tittle = "Добавление пользователя";
+}
+<form asp-action="create" asp-controller="home">
+
+    <div class="form-group">
+        <a>Фамилия:</a>
+        <input type="text" asp-for="Surname" placeholder="Фамилия" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <a>Имя:</a>
+        <input type="text" asp-for="Name" placeholder="Имя" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <a>Дата рождения:</a>
+        <input type="date" asp-for="BirthDate" placeholder="Фамилия" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <a>Email:</a>
+        <input type="email" asp-for="Email" placeholder="Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <a>Логин:</a>
+        <input type="text" asp-for="Login" placeholder="Логин" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <a>Пароль:</a>
+        <input type="password" asp-for="Password" placeholder="Пароль" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-outline-success" id="liveToastBtn" />
+    </div>
+
+</form>

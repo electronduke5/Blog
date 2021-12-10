@@ -1,0 +1,468 @@
+﻿@using Blog.Helpers
+@model Blog.ViewModels.IndexViewModel
+
+@{
+    if (Model == null)
+    {
+        <div>Произошла ошибка!</div>
+        return;
+    }
+
+}
+
+@*@model Tuple<Blog.Models.User, Blog.Models.Post>*@
+
+
+@{
+    ViewData["Title"] = Model.ViewingFullName;
+    ViewData["PageId"] = "index";
+    ViewData["RequesterFullname"] = Model.ViewingFullName;
+}
+
+<style>
+
+    .parent {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #efefef;
+        position: fixed;
+    }
+
+    .item {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+
+        /*Если наводишь*/
+        .item:hover:not(.item:active) {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+        /*Если кликаешь*/
+        .item:active {
+            background-color: #dcdcdcdc;
+            color: black;
+            text-decoration: none;
+        }
+
+    .leftcolumn {
+        float: left;
+        width: 20%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 80%;
+        padding-left: 20px;
+    }
+    /* Add a card effect for articles */
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .post {
+        /*transition: height 0.9s ease-in-out;*/
+        width: 100%;
+        /*width: 200px;*/
+        max-height: 200px;
+        resize: none;
+    }
+
+    .post1 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+
+    .posts {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: -10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #post-image {
+        opacity: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    #post-image-view {
+        height: auto;
+        width: auto;
+        border-radius: 0;
+        max-width: 100%;
+    }
+
+    .post-header {
+        display: flex;
+        gap: 10px;
+    }
+
+    .post-image {
+        max-width: 550px;
+    }
+
+        .post-image > img {
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            max-width: 100%;
+        }
+
+    .post-date {
+        font-style: italic;
+    }
+
+    .post-author {
+        font-weight: bold;
+    }
+
+    .post:first-child {
+        padding-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    nav {
+        font-weight: bold;
+        position: fixed;
+        width:100%;
+        margin:5px;
+        border-radius: 7px;
+    }
+</style>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 ">
+    <div class="container">
+        <a class="navbar-brand">
+            <img src="~/res/icon.png" width="32" height="32" class="d-inline-block align-top" />
+            3,14здец
+        </a>
+
+        @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>*@
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        @*<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item ">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Create">Добавить пользователя</a>
+                    </li>
+
+                </ul>
+            </div>*@
+
+        <form class="form-inline">
+
+            <i class="fa fa-sign-in fa-lg"></i>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Loging">Выйти</a>
+
+
+        </form>
+
+    </div>
+</nav>
+
+
+
+<div class="row">
+    <div class="leftcolumn">
+        <ul class="parent">
+            <li>
+                <a class="item" asp-action="EmptyIndex" asp-controller="home">Мой аккаунт</a>
+            </li>
+
+            <li>
+                <a class="item" asp-action="Search" asp-controller="Search">Поиск</a>
+            </li>
+            @{
+                if (Model.LoggedUser.RoleID == 1)
+                {
+                    <li>
+                        <a class="item" asp-action="GetAllPosts" asp-controller="feed">Все посты</a>
+                    </li>
+
+                    <li>
+                        <a class="item" asp-action="GetAllUsers" asp-controller="home" asp-route-id="@Model.LoggedUser.ID">Все пользователи</a>
+                    </li>
+                }
+
+            }
+
+        </ul>
+    </div>
+    <div class="rightcolumn">
+
+        <div class="card">
+            <h2>
+
+                @Model.ViewingFullName
+            </h2>
+            <hr />
+            <dl class="row">
+                @{
+                    if (Model.ViewingUser.BirthDate != null)
+                    {
+
+                        <dt class="col-md-3">
+                            <i class="fa fa-gift fa-lg"></i>
+                            <span>День рождения:</span>
+                        </dt>
+                        <dd class="col-md-7">
+                            @Model.ViewingUser.BirthDate.Value.ToShortDateString()
+                        </dd>
+                    }
+                }
+
+                @{
+                    if (Model.ViewingUser.Email != null)
+                    {
+                        <dt class="col-md-3">
+                            <i class="fa fa-envelope-o fa-lg"></i>
+                            <span>E-mail:</span>
+                        </dt>
+                        <dd class="col-md-7">
+                            @Model.ViewingUser.Email
+                        </dd>
+                    }
+
+                }
+
+
+
+
+            </dl>
+
+            <hr />
+            @{
+                if (Model.RequesterUser || Model.LoggedUser.RoleID == 1)
+                {
+                    <dt class="col-md">
+                        <a class="btn btn-outline-warning" asp-action="AccountEdit" asp-controller="home" asp-route-id="@Model.ViewingUser.ID">Редактировать</a>
+                    </dt>
+                }
+                if (Model.LoggedUser.RoleID == 1 && !Model.RequesterUser)
+                {
+                    <dt class="col-md">
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="home" asp-route-id="@Model.ViewingUser.ID">Удалить</a>
+                    </dt>
+                }
+            }
+
+        </div>
+
+        @{
+            if (Model.RequesterUser)
+            {
+                <div class="card">
+                    @*<dl class="row">*@
+                    @using (Html.BeginForm(
+             "CreatePost",
+             "Post",
+            new { },
+              FormMethod.Post,
+              false,
+              new { @class = "post-create-form", enctype = "multipart/form-data" }
+
+              ))
+                    {
+                        <input type="hidden" name="authorId" value="@Model.ViewingUser.ID" />
+                        <div>
+                            <textarea class="post" type="text" name="content" placeholder="Ну что, какие новости?"></textarea>
+                            <span asp-validation-for="CreatePostViewModel.Content" class="validator"></span>
+                            <span asp-validation-for="CreatePostViewModel.Image" class="validator"></span>
+                        </div>
+                        <div>
+                            <label for="post-image">
+                                <i class="fa fa-file-image-o fa-lg"></i>
+                            </label>
+                        </div>
+
+                        <input id="post-image" type="file" accept="image/*" name="image" />
+                        <button type='submit' class="btn btn-outline-primary">
+                            @*<i class="fa fa-share fa-lg"></i>*@
+                            Опубликовать
+                        </button>
+
+                    }
+
+
+                    @*<dd class="col-sm-1">
+                            <a class="fa fa-picture-o fa-lg" type="file" asp-controller="home"> </a>
+
+                        </dd>*@
+                    @*</dl>*@
+
+                    <img id="post-image-view" src="" alt="">
+                    <a id="post-image-delete" href="#" class="underline">Удалить</a>
+                    @*<input type="file" class="form-control col-md-10" />
+                        <a class="btn btn-outline-info" asp-controller="home">Опубликовать</a>*@
+                </div>
+            }
+
+        }
+
+
+
+        <div class="posts">
+            @{
+
+                if (Model.ViewingUser.Posts.Count != 0)
+                {
+                    foreach (var post in Model.ViewingUser.Posts)
+                    {
+                        <div class="card">
+                            <div class="post-header">
+                                <div class="post-info">
+                                    <div class="post-author">
+                                        @Model.ViewingUser.FullName
+                                    </div>
+                                    <div class="post-date">
+                                        @post.CreatedDate
+                                    </div>
+                                </div>
+
+
+                                @{
+                                    if (Model.RequesterUser || Model.LoggedUser.RoleID == 1)
+                                    {
+                                        using (Html.BeginForm(
+                                                            "DeletePost",
+                                                            "Post",
+                                                            new { },
+                                                            FormMethod.Post,
+                                                            false,
+                                                            new { @class = "delete-post" }
+                                                            ))
+                                        {
+                                            <input type="hidden" name="requesterId" value="@post.UserID" />
+                                            <input type="hidden" name="postId" value="@post.IdPost" />
+
+                                            <button align-items="right" type="submit" class="btn btn-outline-danger">
+                                                <i class="fa fa-close fa-lg"></i>
+                                            </button>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <hr />
+                            <div>
+                                <p>@post.Text</p>
+                            </div>
+
+                            @{
+                                if (post.ImagePath != null)
+                                {
+                                    <div class="post-image centered">
+                                        <img src="@Url.Content(post.FullImagePath)" alt="" />
+                                    </div>
+                                }
+                            }
+
+
+                        </div>
+                    }
+                }
+
+
+
+                else
+                {
+                    <div class="card">
+                        <span class="text-center">Здесь еще нет ни одной записи!</span>
+                    </div>
+                }
+
+            }
+        </div>
+
+
+
+
+
+        @*<div class="card">
+                <h2>TITLE HEADING</h2>
+                <h5>Title description, Dec 7, 2017</h5>
+                <p>Some text..</p>
+                <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            </div>*@
+
+
+    </div>
+
+
+
+</div>
+
+@section Scripts {
+    <script>
+
+
+        function deletePostImage() {
+            $('#post-image-view').hide();
+            $('#post-image-delete').hide();
+            $('#post-image').val(null);
+        }
+
+        function addPostImage() {
+            $('#post-image-view').show();
+            $('#post-image-delete').show();
+        }
+
+        $(document).ready(() => {
+            deletePostImage();
+
+            $('#post-image-delete').on('click', function (event) {
+                event.preventDefault();
+
+                deletePostImage();
+            });
+
+            $('#post-image').change(function () {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const selectedImage = e.target.result;
+                        $('#post-image-view').attr('src', selectedImage);
+                        addPostImage();
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+        });
+
+    </script>
+}
+
+
+
+
