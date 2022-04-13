@@ -25,7 +25,7 @@ namespace Blog.Controllers
 
 
 
-        public async Task<IActionResult> Index(string email, string login, int? id, int page = 1, SortState sortOrder = SortState.IdAsc) //Index - это файл окна, при открытии которого будет запускаться этот асинхрнный метод
+        public async Task<IActionResult> Index(string email, string login, int? id, int page = 1, SortState sortOrder = SortState.IdAsc) //  - это файл окна, при открытии которого будет запускаться этот асинхрнный метод
         {
             IQueryable<User> users = db.Users;
             IQueryable<Role> roles = db.Roles;
@@ -102,7 +102,7 @@ namespace Blog.Controllers
             return View(viewModel);
         }
 
-        //public IActionResult Create()
+        //public IActionResult  ()
         //{
         //    return View();
         //}

@@ -21,11 +21,11 @@ namespace Blog.ViewModels
             RequesterLoggedIn = false;
         }
 
-        protected ViewModelBase(HttpContext httpContext, ApplicationContext database)
-        {
-            RequesterUser = database.TryGetLoggedUserSync(httpContext);
-            RequesterLoggedIn = RequesterUser != null;
-        }
+        //protected ViewModelBase(HttpContext httpContext, ApplicationContext database)
+        //{
+        //    RequesterUser = database.TryGetLoggedUserSync(httpContext);
+        //    RequesterLoggedIn = RequesterUser != null;
+        //}
 
     }
 }

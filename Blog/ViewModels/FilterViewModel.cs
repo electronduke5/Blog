@@ -19,6 +19,5 @@ namespace Blog.Models
             SelectEmail = email;
             SelectLogin = login;
         }
-
     }
 }
